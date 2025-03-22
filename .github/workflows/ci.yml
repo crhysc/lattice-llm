@@ -7,6 +7,16 @@ on:
     branches: [main]
 
 jobs:
+  create-issues:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Create issues from TODOs
+          uses: alstr/todo-to-issue-action@v4
+          with:
+            TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
     runs-on: ubuntu-latest
 
