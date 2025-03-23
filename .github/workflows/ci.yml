@@ -45,9 +45,7 @@ jobs:
           pytest --cov=src/ --cov-report=html
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: coverage-report
           path: htmlcov
-
-#test comment
