@@ -1,13 +1,15 @@
-# hyperparameter_search.py
-
 import os
-import optuna
-import tempfile
 import shutil
-import numpy as np
+import tempfile
 from typing import Any, Dict
 
-# Local imports of your existing modules
+import optuna
+import numpy as np
+from pydantic_settings import BaseSettings
+from datasets import load_dataset
+from transformers import TrainingArguments
+
+# Local imports
 from data_utils import (
     load_id_prop_data,
     make_alpaca_json,
@@ -20,38 +22,37 @@ from model_utils import (
 )
 from train_sft import create_sft_trainer
 from evaluate import evaluate
-
 from jarvis.db.jsonutils import dumpjson, loadjson
-from datasets import load_dataset
-from transformers import TrainingArguments
-from pydantic_settings import BaseSettings
 
 
 class TrainingPropConfig(BaseSettings):
     """
-    Your standard config fields.
-    We'll override some in the hyperparameter search.
+    Configuration fields for your training/hyperparameter search.
+
+    Override some or all of these values (e.g., from JSON) for different runs.
     """
+
+    # Paths, model names, etc.
     id_prop_path: str = "atomgpt/examples/inverse_model/id_prop.csv"
     model_name: str = "knc6/atomgpt_mistral_tc_supercon"
     output_dir: str = "outputs"
     model_save_path: str = "lora_model_m"
     csv_out: str = "AI-AtomGen-prop-dft_3d-test-rmse.csv"
 
+    # Prompt format
     alpaca_prompt: str = "### Instruction:\n{}\n### Input:\n{}\n### Output:\n{}"
     instruction: str = "Below is a description of a superconductor material."
     output_prompt: str = " Generate atomic structure description..."
 
+    # Data-related properties
     prop: str = "Tc_supercon"
     id_tag: str = "id"
     chem_info: str = "formula"   # "none", "formula", or "element_list"
     file_format: str = "poscar"
-
-    # Data splitting
     num_train: int = 2
     num_test: int = 2
 
-    # HPC / GPU
+    # HPC / GPU settings
     max_seq_length: int = 2048
     dtype: str = None
     load_in_4bit: bool = True
@@ -68,8 +69,7 @@ class TrainingPropConfig(BaseSettings):
     lr_scheduler_type: str = "linear"
     seed_val: int = 3407
 
-    # Additional HPC parameters
-    # (LoRA rank, dropout, alpha, etc.)
+    # LoRA / PEFT config
     lora_rank: int = 16
     lora_alpha: int = 16
     lora_dropout: float = 0.0
@@ -77,10 +77,11 @@ class TrainingPropConfig(BaseSettings):
 
 def hyperparam_search_space(trial: optuna.Trial) -> Dict[str, Any]:
     """
-    Defines the range of hyperparameters Optuna will search over.
+    Define the range of hyperparameters Optuna will search over.
+    Extend or modify this function to explore different parameters.
     """
     return {
-        "learning_rate":  trial.suggest_loguniform("learning_rate", 1e-5, 5e-4),
+        "learning_rate": trial.suggest_loguniform("learning_rate", 1e-5, 5e-4),
         "per_device_train_batch_size": trial.suggest_categorical(
             "per_device_train_batch_size", [1, 2, 4]
         ),
@@ -98,10 +99,10 @@ def objective(trial: optuna.Trial, base_config: TrainingPropConfig) -> float:
 
     Returns a metric to be minimized (e.g. validation loss).
     """
-    # Copy the base config so we don't alter it globally
+    # Copy the base config so we don't globally modify it
     cfg = base_config.copy()
 
-    # 1) Sample hyperparameters from the search space
+    # Sample hyperparameters from the search space
     sampled_params = hyperparam_search_space(trial)
     cfg.learning_rate = sampled_params["learning_rate"]
     cfg.per_device_train_batch_size = sampled_params["per_device_train_batch_size"]
@@ -109,8 +110,7 @@ def objective(trial: optuna.Trial, base_config: TrainingPropConfig) -> float:
     cfg.lora_rank = sampled_params["lora_rank"]
     cfg.num_epochs = sampled_params["num_epochs"]
 
-    # We'll create a temporary output directory for each trial
-    # so that multiple trials don't overwrite each other.
+    # Create a temporary directory for each trial
     temp_dir = tempfile.mkdtemp(prefix="optuna_trial_")
     cfg.output_dir = os.path.join(temp_dir, "output")
     cfg.model_save_path = os.path.join(temp_dir, "model_save")
@@ -122,7 +122,9 @@ def objective(trial: optuna.Trial, base_config: TrainingPropConfig) -> float:
         # ---------- DATA LOADING ----------
         data_list = load_id_prop_data(cfg.id_prop_path, cfg)
         train_ids = [row["id"] for row in data_list[: cfg.num_train]]
-        test_ids  = [row["id"] for row in data_list[cfg.num_train : cfg.num_train+cfg.num_test]]
+        test_ids = [row["id"] for row in data_list[
+            cfg.num_train : cfg.num_train + cfg.num_test
+        ]]
 
         # Create train set in Alpaca JSON format
         alpaca_prop_train = os.path.join(cfg.output_dir, "alpaca_prop_train.json")
@@ -143,7 +145,6 @@ def objective(trial: optuna.Trial, base_config: TrainingPropConfig) -> float:
         # ---------- MODEL LOADING ----------
         model, tokenizer = load_base_model(cfg.model_name, cfg)
         model = prepare_peft_model(model, cfg)
-        # In your real code, you'd pass LoRA rank etc. to `prepare_peft_model` if needed.
 
         # ---------- DATASET PREP ----------
         dataset = load_dataset("json", data_files=alpaca_prop_train, split="train")
@@ -155,8 +156,6 @@ def objective(trial: optuna.Trial, base_config: TrainingPropConfig) -> float:
         # ---------- TRAINING ----------
         trainer = create_sft_trainer(model, tokenizer, dataset, cfg)
         trainer.train()
-
-        # Save best model from this trial
         model.save_pretrained(cfg.model_save_path)
 
         # ---------- EVALUATION ----------
@@ -164,37 +163,22 @@ def objective(trial: optuna.Trial, base_config: TrainingPropConfig) -> float:
         model, tokenizer = load_base_model(cfg.model_save_path, cfg)
         model = finalize_for_inference(model)
 
-        # Evaluate on test set. Suppose we measure final eval loss, or we can
-        # do a custom evaluation that returns a numeric metric.
-        # We'll use trainer.evaluate(...) if we have a separate val set,
-        # or call your `evaluate` function.
-        # For demonstration, let's pretend we have a small custom evaluation approach:
-
-        val_loss = 0.0
-        # Here, you could do:
-        # val_loss = trainer.evaluate()["eval_loss"]
-        # But let's do a simple test set run:
-        #   evaluate(...) returns results in a file, not a direct numeric score,
-        #   so let's pretend we parse or approximate something for the metric:
-
-        # We'll just call evaluate in your script (which writes a CSV):
+        # Evaluate on test set
         evaluate(m_test, model, tokenizer, cfg.csv_out, cfg)
 
-        # Return a dummy metric (like 1.0) or parse from CSV if you have some error measure
-        # For demonstration, let's say we parse a "fake" metric from the CSV...
-        # We'll do something naive here:
-        val_loss = np.random.rand()  # placeholder for real logic
-
-        return float(val_loss)
+        # For demonstration, we return a random value as the “metric”
+        # In practice, parse your CSV and compute a real error metric.
+        val_loss = float(np.random.rand())
+        return val_loss
 
     finally:
-        # Cleanup temp directory to avoid leaving many trial outputs on disk
+        # Cleanup temp directory after trial
         shutil.rmtree(temp_dir, ignore_errors=True)
 
 
-def run_hyperparameter_search(config_path: str, n_trials=5):
+def run_hyperparameter_search(config_path: str, n_trials: int = 5) -> optuna.Study:
     """
-    Loads a base config, sets up an Optuna study, and runs multiple trials.
+    Load a base config, set up an Optuna study, and run multiple trials.
 
     :param config_path: Path to a JSON config file.
     :param n_trials: Number of trials for Optuna to run.
@@ -203,7 +187,7 @@ def run_hyperparameter_search(config_path: str, n_trials=5):
     base_cfg = TrainingPropConfig(**base_cfg_dict)
 
     study = optuna.create_study(direction="minimize")
-    study.optimize(lambda trial: objective(trial, base_cfg), n_trials=n_trials)
+    study.optimize(lambda t: objective(t, base_cfg), n_trials=n_trials)
 
     print(f"Best value: {study.best_value}")
     print(f"Best params: {study.best_params}")
@@ -211,8 +195,8 @@ def run_hyperparameter_search(config_path: str, n_trials=5):
 
 
 if __name__ == "__main__":
-    # Example usage:
-    study = run_hyperparameter_search(
+    # Example usage
+    run_hyperparameter_search(
         config_path="alignn/examples/sample_data/config_example.json",
         n_trials=3
     )
