@@ -1,5 +1,3 @@
-# src/main.py
-
 import os
 import time
 import torch
@@ -26,7 +24,13 @@ from jarvis.db.jsonutils import dumpjson, loadjson
 
 @hydra.main(version_base=None, config_path="configs", config_name="main")
 def main(cfg: DictConfig):
+    """
+    Main training/evaluation pipeline.
 
+    Each step can be extended with new logic (e.g., alternative training sets,
+    alternative model load functions) by introducing new modules/factories
+    rather than changing this function's core flow.
+    """
     if not torch.cuda.is_available():
         raise ValueError("GPU not available. Training only tested with GPU.")
 
@@ -34,7 +38,7 @@ def main(cfg: DictConfig):
     print("***** Merged Configuration *****")
     print(OmegaConf.to_yaml(cfg))
 
-    t0 = time.time()
+    start_time = time.time()
 
     # 1) Make output directories
     os.makedirs(cfg.output_dir, exist_ok=True)
@@ -51,23 +55,25 @@ def main(cfg: DictConfig):
 
     # Example train/test splits
     train_ids = [row["id"] for row in data_list[: cfg.num_train]]
-    test_ids  = [row["id"] for row in data_list[cfg.num_train : cfg.num_train + cfg.num_test]]
+    test_ids = [
+        row["id"] for row in data_list[cfg.num_train : cfg.num_train + cfg.num_test]
+    ]
 
     # 4) Create Alpaca-style JSON for train
     alpaca_prop_train = os.path.join(cfg.output_dir, "alpaca_prop_train.json")
     if not os.path.exists(alpaca_prop_train):
-        m_train = make_alpaca_json(data_list, train_ids, cfg)
-        dumpjson(m_train, alpaca_prop_train)
+        train_data = make_alpaca_json(data_list, train_ids, cfg)
+        dumpjson(train_data, alpaca_prop_train)
     else:
-        m_train = loadjson(alpaca_prop_train)
+        train_data = loadjson(alpaca_prop_train)
 
     # 5) Create Alpaca-style JSON for test
     alpaca_prop_test = os.path.join(cfg.output_dir, "alpaca_prop_test.json")
     if not os.path.exists(alpaca_prop_test):
-        m_test = make_alpaca_json(data_list, test_ids, cfg)
-        dumpjson(m_test, alpaca_prop_test)
+        test_data = make_alpaca_json(data_list, test_ids, cfg)
+        dumpjson(test_data, alpaca_prop_test)
     else:
-        m_test = loadjson(alpaca_prop_test)
+        test_data = loadjson(alpaca_prop_test)
 
     # 6) Load model
     model, tokenizer = load_base_model(cfg.model_name, cfg)
@@ -82,16 +88,15 @@ def main(cfg: DictConfig):
 
     # 8) Create trainer and train
     trainer = create_sft_trainer(model, tokenizer, dataset, cfg)
-    trainer_stats = trainer.train()
+    trainer.train()
     model.save_pretrained(cfg.model_save_path)
 
-    # 9) Evaluate
-    #    Re-load in inference mode
+    # 9) Evaluate - re-load in inference mode
     model, tokenizer = load_base_model(cfg.model_save_path, cfg)
     model = finalize_for_inference(model)
-    evaluate(m_test, model, tokenizer, cfg.csv_out, cfg)
+    evaluate(test_data, model, tokenizer, cfg.csv_out, cfg)
 
-    print(f"Done! Total time: {time.time() - t0:.2f} seconds.")
+    print(f"Done! Total time: {time.time() - start_time:.2f} seconds.")
 
 
 if __name__ == "__main__":
