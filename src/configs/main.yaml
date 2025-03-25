@@ -1,0 +1,19 @@
+# src/configs/main.yaml
+
+defaults:
+  - data: csv      # merges in configs/data/csv.yaml
+  - model: llama   # merges in configs/model/llama.yaml
+  - train: train   # merges in configs/train.yaml
+  - eval: eval     # merges in configs/eval.yaml
+
+prop: bandgap
+id_tag: jid
+chem_info: none
+id_prop_path: "atomgpt/examples/inverse_model/id_prop.csv"
+
+output_dir: "./outputs"
+model_save_path: "./my_model"
+
+num_train: 100
+num_test: 20
+seed_val: 42
