@@ -1,17 +1,21 @@
-# train_sft.py
 import torch
 from trl import SFTTrainer
 from transformers import TrainingArguments
+
 from atomgpt.inverse_models.custom_trainer import CustomSFTTrainer
 
-def create_sft_trainer(
-    model,
-    tokenizer,
-    dataset,
-    config,
-    logging_steps: int = 1
-):
-    """Creates the SFTTrainer with user-defined arguments."""
+
+def create_sft_trainer(model,
+                       tokenizer,
+                       dataset,
+                       config,
+                       logging_steps: int = 1) -> CustomSFTTrainer:
+    """
+    Create the SFTTrainer with user-defined arguments.
+
+    If you want multiple trainer configurations, you can create different
+    factories that return trainers without editing existing logic here.
+    """
     trainer = CustomSFTTrainer(
         model=model,
         tokenizer=tokenizer,
