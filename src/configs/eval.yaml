@@ -1,0 +1,4 @@
+# src/configs/eval.yaml
+csv_out: "./outputs/test_predictions.csv"
+alpaca_prompt: "Below is an instruction...\nInstruction: {}\nInput: {}\nResponse:\n{}"
+instruction: "Please reconstruct the crystal structure."
