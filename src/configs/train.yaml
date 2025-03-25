@@ -1,0 +1,9 @@
+# src/configs/train.yaml
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 2
+learning_rate: 2e-5
+num_epochs: 3
+lr_scheduler_type: "cosine"
+optim: "adamw_hf"
+loss_type: "vanilla"
+dataset_num_proc: 1
