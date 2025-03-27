@@ -13,7 +13,7 @@
 mkdir -p logs
 
 source ~/.bashrc
-conda activate {environment}
+conda activate {{ environment }}
 
-python {script} --config {config}
+python {{ script }} --config {{ config }}
 
