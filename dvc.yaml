@@ -1,0 +1,10 @@
+stages:
+  preprocess:
+    cmd: python data/preprocess.py
+    deps:
+      - data/raw/
+      - data/preprocess.py
+    outs:
+      - data/processed/
+    conda:
+      env_file: environment.yml
