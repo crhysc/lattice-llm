@@ -1,7 +1,8 @@
 job_name: "default"
 template: "slurm/templates/train_template.sbatch"
 script: "src/main.py"
-config: "config.yaml"
+config: "/dev/null"
+environment: "${ENV}"
 
 time: "07:00:00"
 partition: "gpu_7day"
