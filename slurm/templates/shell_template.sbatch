@@ -12,5 +12,8 @@
 
 mkdir -p logs
 
+source ~/.bashrc
+conda activate {environment}
+
 bash {script}
 
