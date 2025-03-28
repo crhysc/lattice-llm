@@ -3,6 +3,8 @@
 INPUT_DIR="./raw/compressed"
 OUTPUT_DIR="./raw/decompressed"
 
+mkdir -p "$OUTPUT_DIR"
+
 for file in "$INPUT_DIR"/*; do
     case "$file" in
         *.zip)
@@ -15,11 +17,14 @@ for file in "$INPUT_DIR"/*; do
             tar -xjf "$file" -C "$OUTPUT_DIR"
             ;;
         *.gz)
-            gunzip -c "$file" > "$OUTPUT_DIR/$(basename "${file%.gz}")"
+            outfile="$OUTPUT_DIR/$(basename "${file%.gz}")"
+            gunzip -c "$file" > "$outfile"
             ;;
         *)
             echo "Skipping unsupported file: $file"
             ;;
     esac
 done
+
+echo "Decompression complete."
 
