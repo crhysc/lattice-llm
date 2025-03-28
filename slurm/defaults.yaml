@@ -10,5 +10,5 @@ gpus: "1"
 mem: "16G"
 cpus: "4"
 
-output: "slurm/generated/job.sbatch"
+output: "./generated/job.sbatch"
 
