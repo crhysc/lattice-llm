@@ -1,0 +1,17 @@
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-a.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-b.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-c.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-d.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-e.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-f.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-g.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-h.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-i.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-j.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-k.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-l.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-m.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-n.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-o.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-p.tar.bz2
+https://archive.materialscloud.org/record/file?record_id=1948&filename=batch-q.tar.bz2
