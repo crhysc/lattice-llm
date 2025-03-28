@@ -5,10 +5,16 @@ OUTPUT_DIR="./raw/decompressed"
 
 mkdir -p "$OUTPUT_DIR"
 
+# Get total number of files to decompress
+total_files=$(find "$INPUT_DIR" -type f | wc -l)
+count=0
+
 for file in "$INPUT_DIR"/*; do
+    echo "[$count/$total_files] Decompressing $(basename "$file")..."
+
     case "$file" in
         *.zip)
-            unzip -d "$OUTPUT_DIR" "$file"
+            unzip -q -d "$OUTPUT_DIR" "$file"
             ;;
         *.tar.gz | *.tgz)
             tar -xzf "$file" -C "$OUTPUT_DIR"
@@ -24,7 +30,10 @@ for file in "$INPUT_DIR"/*; do
             echo "Skipping unsupported file: $file"
             ;;
     esac
+
+    count=$((count + 1))
 done
 
-echo "Decompression complete."
+echo "Decompression complete. Output saved to: $OUTPUT_DIR"
+
 
