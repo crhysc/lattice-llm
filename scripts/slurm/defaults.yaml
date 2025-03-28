@@ -1,4 +1,4 @@
-job_name: "default"
+job_name: "/dev/null"
 template: "slurm/templates/python_template.sbatch"
 script: "src/main.py"
 config: "/dev/null"
@@ -10,5 +10,5 @@ gpus: "1"
 mem: "16G"
 cpus: "4"
 
-output: "./generated/job.sbatch"
+output: "./generated/${job_name}.sbatch"
 
