@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set default output directory or use the one passed as argument
-OUTDIR="${1:-./raw/compressed}"
+OUTDIR="${1:-./raw}"
 
 # Create the output directory if it doesn't exist
 mkdir -p "$OUTDIR"
