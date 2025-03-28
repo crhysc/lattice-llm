@@ -1,5 +1,5 @@
 job_name: "default"
-template: "slurm/templates/train_template.sbatch"
+template: "slurm/templates/python_template.sbatch"
 script: "src/main.py"
 config: "/dev/null"
 environment: "${ENV}"
