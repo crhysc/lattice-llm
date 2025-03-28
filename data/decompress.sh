@@ -1,7 +1,7 @@
 #!/bin/bash
 
-INPUT_DIR="./raw/compressed"
-OUTPUT_DIR="./raw/decompressed"
+INPUT_DIR="./raw"
+OUTPUT_DIR="./interim"
 
 mkdir -p "$OUTPUT_DIR"
 
