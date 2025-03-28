@@ -26,7 +26,7 @@ while read -r url; do
 
   # Download the file
   echo "[$count/$total_urls] Downloading $filename to $OUTDIR..."
-  wget -q -O "$filepath" "$url"
+  wget -O "$filepath" "$url"
 
   # Increment count
   count=$((count + 1))
