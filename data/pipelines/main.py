@@ -15,7 +15,7 @@ from utils.data_preprocessor import process_superconducting_dataset
 logging.basicConfig(level=logging.INFO)
 
 
-@hydra.main(version_base=None, config_path="configs", config_name="config.yaml")
+@hydra.main(version_base=None, config_path="../../configs/data", config_name=pipelines.yaml")
 def main_app(cfg: DictConfig) -> None:
     """
     Main entry point, orchestrating the data preprocessing.
