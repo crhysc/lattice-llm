@@ -1,6 +1,3 @@
-defaults:
-  - override /main: default
-
 input_dir: "${hydra:runtime.cwd}/data/interim"
 output_dir: "${hydra}:runtime.cwd}/data/processed"
 filename_prefix: "POSCAR_"
