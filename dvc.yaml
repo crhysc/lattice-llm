@@ -1,9 +1,25 @@
 stages:
-  preprocess:
-    cmd: python data/preprocess.py
+  download:
+    cmd: bash data/download.sh
+    deps:
+      - data/urls.txt
+      - data/download.sh
+    outs:
+      - data/raw/
+
+  decompress:
+    cmd: bash data/decompress.sh
     deps:
       - data/raw/
-      - data/preprocess.py
+      - data/decompress.sh
+    outs:
+      - data/interim/
+
+  retrieval:
+    cmd: python data/pipelines/main.py
+    deps:
+      - data/interim/
+      - scripts/main.py
     outs:
       - data/processed/
-    conda: environment.yml
+
