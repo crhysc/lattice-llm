@@ -6,5 +6,4 @@ stages:
       - data/preprocess.py
     outs:
       - data/processed/
-    conda:
-      env_file: environment.yml
+    conda: environment.yml
