@@ -1,5 +1,6 @@
 # src/configs/model/llama.yaml
 
+model_source: "local"
 local_name: "~"
 remote_name: "decapoda-research/llama-7b-hf"
 max_seq_length: 512

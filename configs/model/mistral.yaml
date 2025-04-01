@@ -1,5 +1,6 @@
 # src/configs/model/mistral.yaml
 
+model_source: "local"
 local_name: "~/LLMs/mistral-7b-bnb-4bit/"
 remote_name: "~"
 max_seq_length: 512

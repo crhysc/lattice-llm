@@ -8,8 +8,6 @@ defaults:
 
 id_prop_path: "data/backup_processed"
 
-model_source: "local"
-
 output_dir: "./outputs"
 model_save_path: "./my_model"
 
