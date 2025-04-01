@@ -1,15 +1,14 @@
 # configs/main.yaml
 
 defaults:
-  - mistral   # merges in configs/model/llama.yaml
-  - train   # merges in configs/train.yaml
-  - eval     # merges in configs/eval.yaml
+  - mistral
+  - train
+  - eval
   - _self_
 
-prop: bandgap
-id_tag: jid
-chem_info: none
-id_prop_path: "atomgpt/examples/inverse_model/id_prop.csv"
+id_prop_path: "data/backup_processed"
+
+model_source: "local"
 
 output_dir: "./outputs"
 model_save_path: "./my_model"

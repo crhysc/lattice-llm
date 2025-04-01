@@ -1,5 +1,8 @@
 # src/configs/model/llama.yaml
-model_name: "decapoda-research/llama-7b-hf"
+
+local_name: "~"
+remote_name: "decapoda-research/llama-7b-hf"
 max_seq_length: 512
 dtype: "float16"
 load_in_4bit: false
+
