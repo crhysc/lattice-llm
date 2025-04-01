@@ -21,8 +21,9 @@ from evaluate import evaluate
 from datasets import load_dataset
 from jarvis.db.jsonutils import dumpjson, loadjson
 
+config_path = os.path.join(os.path.dirname(__file__), "../configs")
 
-@hydra.main(version_base=None, config_path="configs", config_name="main")
+@hydra.main(version_base=None, config_path=config_path, config_name="main")
 def main(cfg: DictConfig):
     """
     Main training/evaluation pipeline.
