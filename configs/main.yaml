@@ -1,7 +1,7 @@
 # configs/main.yaml
 
 defaults:
-  - mistral
+  - model: mistral
   - train
   - eval
   - _self_
