@@ -1,10 +1,10 @@
 # configs/main.yaml
 
 defaults:
-  - data: csv      # merges in configs/data/csv.yaml
-  - model: llama   # merges in configs/model/llama.yaml
-  - train: train   # merges in configs/train.yaml
-  - eval: eval     # merges in configs/eval.yaml
+  - mistral   # merges in configs/model/llama.yaml
+  - train   # merges in configs/train.yaml
+  - eval     # merges in configs/eval.yaml
+  - _self_
 
 prop: bandgap
 id_tag: jid
