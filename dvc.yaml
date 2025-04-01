@@ -22,5 +22,6 @@ stages:
       - scripts/main.py
     outs:
       - data/processed/
-    conda: environment.yaml
+  
+conda: environment.yaml
 
