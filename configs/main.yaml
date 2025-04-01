@@ -1,4 +1,4 @@
-# src/configs/main.yaml
+# configs/main.yaml
 
 defaults:
   - data: csv      # merges in configs/data/csv.yaml
