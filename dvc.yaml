@@ -6,6 +6,7 @@ stages:
       - data/download.sh
     outs:
       - data/raw/
+    cache: false
 
   decompress:
     cmd: bash data/decompress.sh
@@ -14,6 +15,7 @@ stages:
       - data/decompress.sh
     outs:
       - data/interim/
+    cache: false
 
   preprocess:
     cmd: python data/pipelines/main.py
@@ -22,3 +24,4 @@ stages:
       - data/pipelines/main.py
     outs:
       - data/processed
+    cache: true
