@@ -2,3 +2,4 @@
 csv_out: "./outputs/test_predictions.csv"
 alpaca_prompt: "Below is an instruction...\nInstruction: {}\nInput: {}\nResponse:\n{}"
 instruction: "Please reconstruct the crystal structure."
+output_prompt: "Generate atomic structure description with lattice lengths, angles, coordinates and atom types."
