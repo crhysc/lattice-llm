@@ -6,10 +6,10 @@ defaults:
   - eval
   - _self_
 
-id_prop_path: "{hydra:runtime.cwd}/data/backup_processed"
+id_prop_path: "${hydra:runtime.cwd}/data/processed"
 
-output_dir: "{hydra:runtime.cwd}/outputs"
-model_save_path: "{hydra:runtime.cwd}/outputs/my_model"
+output_dir: "${hydra:runtime.cwd}/outputs"
+model_save_path: "${hydra:runtime.cwd}/outputs/my_model"
 
 num_train: 100
 num_test: 20
