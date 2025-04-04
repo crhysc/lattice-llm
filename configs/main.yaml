@@ -6,7 +6,7 @@ defaults:
   - eval
   - _self_
 
-id_prop_path: "${hydra:runtime.cwd}/data/processed"
+id_prop_path: "${hydra:runtime.cwd}/data/processed/id_prop.csv"
 
 output_dir: "${hydra:runtime.cwd}/outputs"
 model_save_path: "${hydra:runtime.cwd}/outputs/my_model"
