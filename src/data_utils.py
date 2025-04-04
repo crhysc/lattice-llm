@@ -130,10 +130,14 @@ def load_id_prop_data(id_prop_path: str, config) -> List[Dict[str, Any]]:
     """
     Load data from CSV and merges with Atoms info.
 
-    Returns a list of dicts with 'id', the user-defined property,
-    and the 'atoms' dict. You can extend this to handle multiple
-    file formats or additional data merges without modifying the
-    existing logic (e.g., implement new file loaders).
+    CSV format assumption:
+       Column 1: Full or relative path to the POSCAR file
+       Column 2: A numerical property (e.g. tc_supoercon)
+
+    Returns a list of dicts with:
+       - 'id': the path to the POSCAR file
+       - config.prop: the numerical property as a float
+       - 'atoms': the Atoms object (in dict form) read from the POSCAR.
     """
     run_path = os.path.dirname(id_prop_path)
     data_rows = []
@@ -143,28 +147,26 @@ def load_id_prop_data(id_prop_path: str, config) -> List[Dict[str, Any]]:
 
     data_list = []
     for row in data_rows:
-        info = {"id": row[0]}
+        # row[0] = POSCAR file path, row[1] = numeric property
+        poscar_file = row[0].strip()
+        try:
+            prop_val = float(row[1])
+        except ValueError:
+            print(f"Warning: Could not parse property value in row: {row}")
+            continue
 
-        # Merge property
-        tmp_vals = [float(j) for j in row[1:]]
-        if len(tmp_vals) == 1:
-            info[config.prop] = str(tmp_vals[0])
-        else:
-            info[config.prop] = "\n".join(map(str, tmp_vals))
+        info = {"id": poscar_file, config.prop: prop_val}
 
-        # Load Atoms based on config.file_format
-        pth = os.path.join(run_path, info["id"])
-        # Example extension point:
-        # if config.file_format == "json":
-        #     atoms = Atoms.from_dict(loadjson(pth + ".json"))
-        # elif config.file_format == "poscar":
-        #     ...
-        # else:
-        #     ...
-        # For now, assume you already have `atoms` from some logic:
-        atoms = Atoms()  # placeholder
+        # If poscar_file is not absolute, prepend 'run_path':
+        if not os.path.isabs(poscar_file):
+            poscar_file = os.path.join(run_path, poscar_file)
+        try:
+            atoms = Atoms.from_poscar(poscar_file)
+        except Exception as e:
+            print(f"Warning: Could not load POSCAR from {poscar_file}: {e}")
+            atoms = Atoms()
+
         info["atoms"] = atoms.to_dict()
-
         data_list.append(info)
 
     return data_list
