@@ -73,6 +73,35 @@ def get_input(config, chem: str, val: float) -> str:
     return inp
 
 
+def get_crystal_string_t(atoms) -> str:
+    """
+    Return a string containing the structure's lattice parameters.
+
+    IMPORTANT: Direct copy and paste from NIST's AtomGPT. This is because
+    AtomGPT's remote repository is ahead of the most current version
+    accessible by pip install, meaning that this function cannot be
+    accessed with the normal "pip install atomgpt".
+    """
+    lengths = atoms.lattice.abc  # structure.lattice.parameters[:3]
+    angles = atoms.lattice.angles
+    atom_ids = atoms.elements
+    frac_coords = atoms.frac_coords
+
+    crystal_str = (
+        " ".join(["{0:.2f}".format(x) for x in lengths])
+        + "\n"
+        + " ".join([str(int(x)) for x in angles])
+        + "\n"
+        + "\n".join(
+            [
+                str(t) + " " + " ".join(["{0:.3f}".format(x) for x in c])
+                for t, c in zip(atom_ids, frac_coords)
+            ]
+        )
+    )
+    return crystal_str
+
+
 def make_alpaca_json(dataset: List[Dict[str, Any]],
                      jids: List[str],
                      config) -> List[Dict[str, Any]]:
