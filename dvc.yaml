@@ -11,7 +11,6 @@ stages:
   decompress:
     cmd: bash data/decompress.sh
     deps:
-      - data/raw/
       - data/decompress.sh
     outs:
       - data/interim/:
@@ -20,7 +19,6 @@ stages:
   preprocess:
     cmd: python data/pipelines/main.py
     deps:
-      - data/interim
       - data/pipelines/main.py
     outs:
       - data/processed:
