@@ -6,7 +6,6 @@ from typing import Any, Dict, List
 from jarvis.core.atoms import Atoms
 from jarvis.db.jsonutils import loadjson, dumpjson
 from datasets import load_dataset
-from atomgpt.scripts.alpaca_tc_supercon import get_crystal_string_t
 
 
 class ChemInfoStrategy(ABC):
