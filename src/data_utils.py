@@ -6,6 +6,7 @@ from typing import Any, Dict, List
 from jarvis.core.atoms import Atoms
 from jarvis.db.jsonutils import loadjson, dumpjson
 from datasets import load_dataset
+from atomgpt.scripts.alpaca_tc_supercon import get_crystal_string_t
 
 
 class ChemInfoStrategy(ABC):
@@ -99,7 +100,6 @@ def make_alpaca_json(dataset: List[Dict[str, Any]],
                     val=entry[config.prop],
                     chem=chem
                 ),
-                # This function presumably comes from your script.
                 "output": get_crystal_string_t(atoms),
                 "id": entry[config.id_tag],
             }
@@ -131,8 +131,8 @@ def load_id_prop_data(id_prop_path: str, config) -> List[Dict[str, Any]]:
     Load data from CSV and merges with Atoms info.
 
     CSV format assumption:
-       Column 1: Full or relative path to the POSCAR file
-       Column 2: A numerical property (e.g. tc_supoercon)
+       Column 1: numeric property (e.g. Tc value, bandgap, etc.)
+       Column 2: relative path of the POSCAR file
 
     Returns a list of dicts with:
        - 'id': the path to the POSCAR file
@@ -148,9 +148,9 @@ def load_id_prop_data(id_prop_path: str, config) -> List[Dict[str, Any]]:
     data_list = []
     for row in data_rows:
         # row[0] = POSCAR file path, row[1] = numeric property
-        poscar_file = row[0].strip()
+        poscar_file = row[1].strip()
         try:
-            prop_val = float(row[1])
+            prop_val = float(row[0])
         except ValueError:
             print(f"Warning: Could not parse property value in row: {row}")
             continue
