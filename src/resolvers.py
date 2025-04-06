@@ -23,7 +23,6 @@ Resolvers Defined:
 
 from omegaconf import OmegaConf
 from model_utils import torch_dtype_resolver
-from data_utils import data_split_resolver
 
 
 def register_resolvers():
