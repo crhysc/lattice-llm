@@ -77,7 +77,7 @@ def main(cfg: DictConfig):
         test_data = loadjson(alpaca_prop_test)
 
     # 6) Load model
-    model, tokenizer = load_base_model(cfg.model_name, cfg)
+    model, tokenizer = load_base_model(cfg.model, cfg)
     model = prepare_peft_model(model, cfg)
 
     # 7) Prepare training dataset
