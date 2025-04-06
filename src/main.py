@@ -4,6 +4,8 @@ import torch
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
+from jarvis.db.jsonutils import dumpjson, loadjson
+from datasets import load_dataset
 
 # Local imports
 from data_utils import (
@@ -16,12 +18,13 @@ from model_utils import (
     prepare_peft_model,
     finalize_for_inference,
 )
+from resolvers import register_resolvers
 from train_sft import create_sft_trainer
 from evaluate import evaluate
-from datasets import load_dataset
-from jarvis.db.jsonutils import dumpjson, loadjson
 
 config_path = os.path.join(os.path.dirname(__file__), "../configs")
+
+register_resolvers()
 
 @hydra.main(version_base=None, config_path=config_path, config_name="main")
 def main(cfg: DictConfig):
