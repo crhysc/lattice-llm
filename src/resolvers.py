@@ -19,7 +19,6 @@ Usage:
 
 Resolvers Defined:
     - torch_dtype: Maps a string like "float16" to the corresponding torch.dtype object.
-    - data_split: Converts a ratio string like "80:20" into normalized train/test fractions.
 """
 
 from omegaconf import OmegaConf
