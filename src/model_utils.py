@@ -98,10 +98,29 @@ def create_loader(model_config, general_config, load_from: str = None) -> BaseMo
 ########################################################################
 # 5) Primary load functions used by main
 ########################################################################
+def map_string_to_torch_dtype(dtype_value: Any) -> torch.dtype:
+    """
+    Convert a config value (possibly a string) into a real torch.dtype.
+    If already a torch.dtype, just return it.
+    """
+    if isinstance(dtype_value, torch.dtype):
+        return dtype_value
+    if dtype_value == "float16":
+        return torch.float16
+    elif dtype_value == "bfloat16":
+        return torch.bfloat16
+    elif dtype_value == "float32":
+        return torch.float32
+    else:
+        raise ValueError(f"Unsupported or unrecognized dtype: {dtype_value}")
+
+
 def load_base_model(model_config, general_config, load_from: str = None) -> Tuple[torch.nn.Module, Any]:
     """
-    Create the appropriate loader, then load the model/tokenizer.
+    Resolve cfg.dtype, create the appropriate loader, and then load
+    the model/tokenizer.
     """
+    model_config.dtype = map_string_to_torch_dtype(model_config.dtype)
     loader = create_loader(model_config, general_config, load_from)
     return loader.load()
 
