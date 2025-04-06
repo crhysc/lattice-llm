@@ -84,7 +84,7 @@ def create_loader(model_config, general_config, load_from: str = None) -> BaseMo
     `load_from` can be used to override local_name (e.g. reloading from 
     a saved fine-tuned model).
     """
-    source = model_config.model_source
+    source = general_config.model_source
 
     if source == "hf":
         return HfModelLoader(model_config, general_config)
