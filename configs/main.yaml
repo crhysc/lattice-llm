@@ -12,7 +12,7 @@ model_save_path: "${hydra:runtime.cwd}/outputs/my_model"
 prop: tc_ad # tc_ad or tc_opt
 chem_info: formula # none, element_list, or formula
 id_tag: id
-
+model_source: local # local or hf (Hugging Face)
 num_train: 100
 num_test: 20
 seed_val: 42

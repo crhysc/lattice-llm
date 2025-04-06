@@ -2,7 +2,7 @@
 
 model_source: "local"
 local_name: "~/LLMs/mistral-7b-bnb-4bit/"
-remote_name: "~"
+remote_name: ""
 max_seq_length: 512
 dtype: "float16"
 load_in_4bit: false
