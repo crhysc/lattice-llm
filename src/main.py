@@ -22,9 +22,10 @@ from resolvers import register_resolvers
 from train_sft import create_sft_trainer
 from evaluate import evaluate
 
-config_path = os.path.join(os.path.dirname(__file__), "../configs")
 
+config_path = os.path.join(os.path.dirname(__file__), "../configs")
 register_resolvers()
+
 
 @hydra.main(version_base=None, config_path=config_path, config_name="main")
 def main(cfg: DictConfig):
