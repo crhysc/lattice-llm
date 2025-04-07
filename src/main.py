@@ -50,7 +50,7 @@ def main(cfg: DictConfig):
     os.makedirs(cfg.model_save_path, exist_ok=True)
 
     # 2) Save config for reproducibility
-    OmegaConf.save(config=cfg, f=cfg.output_dir)
+    OmegaConf.save(config=cfg, f=os.path.join(cfg.output_dir, "config.yaml")
 
     # 3) Load data
     data_list = load_id_prop_data(cfg.id_prop_path, cfg)
