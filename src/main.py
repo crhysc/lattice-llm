@@ -19,7 +19,7 @@ from model_utils import (
     finalize_for_inference,
 )
 from resolvers import register_resolvers
-from train_sft import create_sft_trainer
+from training_utils import create_sft_trainer
 from evaluate import evaluate
 
 
