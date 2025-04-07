@@ -1,6 +1,0 @@
-dfaults:
-- override /main: default
-input_dir: ./interim
-output_dir: ./processed
-filename_prefix: POSCAR_
-tc_key: Tc_AD
