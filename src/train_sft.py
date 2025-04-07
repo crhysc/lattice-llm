@@ -21,7 +21,7 @@ def create_sft_trainer(model,
         tokenizer=tokenizer,
         train_dataset=dataset,
         dataset_text_field="text",
-        max_seq_length=config.max_seq_length,
+        max_seq_length=config.model.max_seq_length,
         dataset_num_proc=config.dataset_num_proc,
         loss_type=config.loss_type,
         packing=False,  # Turn on if you want auto-packing
