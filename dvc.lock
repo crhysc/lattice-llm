@@ -1,0 +1,15 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python data/pipelines/main.py
+    deps:
+    - path: data/pipelines/main.py
+      hash: md5
+      md5: a4c6bc678600134f846f3b6018d9c239
+      size: 939
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 5ac0a78c963a84fd36860be2ae05daf5.dir
+      size: 5248658
+      nfiles: 8250
