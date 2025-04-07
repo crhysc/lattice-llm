@@ -3,6 +3,6 @@
 local_name: "${hydra:runtime.cwd}/../LLMs/mistral-7b-bnb-4bit/"
 remote_name: ""
 max_seq_length: 512
-dtype: ${torch_dtype: float16}
+dtype: "${torch_dtype: float16}"
 load_in_4bit: false
 
