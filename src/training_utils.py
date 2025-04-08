@@ -37,7 +37,7 @@ class HuggingFaceSFTTrainer(AbstractSFTTrainer):
         self.args = TrainingArguments(
             per_device_train_batch_size=config.per_device_train_batch_size,
             gradient_accumulation_steps=config.gradient_accumulation_steps,
-            warmup_steps=config.warmup_steps,
+            warmup_ratio=config.train.warmup_ratio,
             overwrite_output_dir=True,
             learning_rate=config.learning_rate,
             fp16=not torch.cuda.is_bf16_supported(),
@@ -85,7 +85,7 @@ class CustomWrappedSFTTrainer(AbstractSFTTrainer):
         self.args = TrainingArguments(
             per_device_train_batch_size=config.per_device_train_batch_size,
             gradient_accumulation_steps=config.gradient_accumulation_steps,
-            warmup_steps=config.warmup_steps,
+            warmup_ratio=config.train.warmup_ratio,
             overwrite_output_dir=True,
             learning_rate=config.learning_rate,
             fp16=not torch.cuda.is_bf16_supported(),
