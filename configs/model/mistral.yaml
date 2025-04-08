@@ -1,4 +1,4 @@
-# src/configs/model/mistral.yaml
+# configs/model/mistral.yaml
 
 local_name: "${hydra:runtime.cwd}/../LLMs/mistral-7b-bnb-4bit/"
 remote_name: ""
