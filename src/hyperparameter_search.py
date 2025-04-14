@@ -128,6 +128,10 @@ def hyperparam_search_space(trial: optuna.Trial, cfg: DictConfig):
         "lora_rank": lora_rank,
         "num_epochs": num_epochs,
     }
+## This search space is hardcoded into this script, and it is a placeholder. A config file
+## representing the search space will be made soon, and it will contain these hardcoded values.
+## This script is still under construction.
+
 
 
 def objective(trial: optuna.Trial, cfg: DictConfig) -> float:
